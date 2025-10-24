@@ -1,0 +1,34 @@
+# Python dependencies for Proof-of-Inference Market
+
+# Web3 and Blockchain
+web3==6.11.3
+eth-account==0.10.0
+eth-utils==2.3.1
+
+# Web Framework
+flask==3.0.0
+flask-cors==4.0.0
+
+# HTTP Requests
+requests==2.31.0
+
+# Async Support
+aiohttp==3.9.1
+
+# Data Validation
+pydantic==2.5.2
+
+# Logging
+python-json-logger==2.0.7
+
+# ML/AI (if using real models)
+# Uncomment if needed:
+# openai==1.3.7
+# anthropic==0.7.8
+
+# Testing
+pytest==7.4.3
+pytest-asyncio==0.21.1
+
+# Development
+python-dotenv==1.0.0

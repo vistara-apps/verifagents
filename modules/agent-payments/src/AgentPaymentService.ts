@@ -125,7 +125,7 @@ export class FourMicaClient {
   constructor(config: FourMicaConfig) {
     this.config = config;
     this.provider = new ethers.JsonRpcProvider(config.rpcUrl);
-    this.wallet = new ethers.Wallet(config.privateKey, this.provider);
+    this.wallet = new ethers.Wallet(config.walletPrivateKey, this.provider);
     
     // In a real implementation, this would be the actual Core4Mica contract ABI
     this.contract = new ethers.Contract(

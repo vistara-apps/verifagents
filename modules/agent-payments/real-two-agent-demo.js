@@ -82,20 +82,32 @@ ${colors.reset}\n`);
   await sleep(2000);
 
   try {
+    // Load configuration from environment or use provided values
+    // IMPORTANT: Set these environment variables before running:
+    // export PAYER_PRIVATE_KEY="your_payer_private_key"
+    // export RECIPIENT_PRIVATE_KEY="your_recipient_private_key"
+
+    const payerPrivateKey = process.env.PAYER_PRIVATE_KEY || '0x8f2f6601c919fa725e4ccd4dae2af1aba1203545d2d9d157d1df57821fe9c7c0';
+    const recipientPrivateKey = process.env.RECIPIENT_PRIVATE_KEY || '0x8cb23df33397a488ea8d9be152e50cf6770aad7a0f37bf2efd3f2d21b2625b11';
+
+    if (!process.env.PAYER_PRIVATE_KEY) {
+      log('WARNING', '⚠️  Using default test private keys', 'Set PAYER_PRIVATE_KEY and RECIPIENT_PRIVATE_KEY env vars for your own keys');
+    }
+
     // Agent 1: Payer (your funded wallet)
     const payerConfig = {
-      rpc_url: 'https://api.4mica.xyz',
-      wallet_private_key: '0x8f2f6601c919fa725e4ccd4dae2af1aba1203545d2d9d157d1df57821fe9c7c0',
-      ethereum_http_rpc_url: 'https://ethereum-holesky.publicnode.com',
-      contract_address: '0x698B98d6574dE06dD39A49Cc4e37f3B06d454Eb9'
+      rpc_url: process.env.RPC_URL || 'https://api.4mica.xyz',
+      wallet_private_key: payerPrivateKey,
+      ethereum_http_rpc_url: process.env.ETHEREUM_RPC_URL || 'https://ethereum-holesky.publicnode.com',
+      contract_address: process.env.CONTRACT_ADDRESS || '0x698B98d6574dE06dD39A49Cc4e37f3B06d454Eb9'
     };
 
     // Agent 2: Recipient (different agent)
     const recipientConfig = {
-      rpc_url: 'https://api.4mica.xyz',
-      wallet_private_key: '0x8cb23df33397a488ea8d9be152e50cf6770aad7a0f37bf2efd3f2d21b2625b11',
-      ethereum_http_rpc_url: 'https://ethereum-holesky.publicnode.com',
-      contract_address: '0x698B98d6574dE06dD39A49Cc4e37f3B06d454Eb9'
+      rpc_url: process.env.RPC_URL || 'https://api.4mica.xyz',
+      wallet_private_key: recipientPrivateKey,
+      ethereum_http_rpc_url: process.env.ETHEREUM_RPC_URL || 'https://ethereum-holesky.publicnode.com',
+      contract_address: process.env.CONTRACT_ADDRESS || '0x698B98d6574dE06dD39A49Cc4e37f3B06d454Eb9'
     };
 
     const payerAddress = '0x292F0E22A0245387a89d5DB50F016d18D6aF0bac';

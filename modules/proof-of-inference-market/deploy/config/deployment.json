@@ -1,0 +1,23 @@
+{
+  "network": "sepolia",
+  "rpcUrl": "https://sepolia.infura.io/v3/YOUR_INFURA_KEY",
+  "privateKey": "YOUR_PRIVATE_KEY",
+  "contracts": {
+    "rewardToken": "0x0000000000000000000000000000000000000000",
+    "eigenLayerRegistry": "0x0000000000000000000000000000000000000000",
+    "erc8004Registry": "0x0000000000000000000000000000000000000000"
+  },
+  "services": {
+    "avsPerformer": {
+      "port": 8081,
+      "httpPort": 8082
+    },
+    "mlAgent": {
+      "models": [
+        "gpt-3.5-turbo",
+        "claude-3-opus", 
+        "llama-2-70b"
+      ]
+    }
+  }
+}

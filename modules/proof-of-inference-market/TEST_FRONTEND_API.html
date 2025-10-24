@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Proof-of-Inference Market - Frontend API Test</title>
+    <style>
+        body {
+            font-family: monospace;
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #1a1a1a;
+            color: #00ff00;
+        }
+        h1 { color: #00ffff; }
+        button {
+            background: #00ff00;
+            color: #000;
+            border: none;
+            padding: 10px 20px;
+            margin: 5px;
+            cursor: pointer;
+            font-family: monospace;
+            font-size: 14px;
+        }
+        button:hover { background: #00ffff; }
+        .output {
+            background: #000;
+            border: 1px solid #00ff00;
+            padding: 15px;
+            margin: 10px 0;
+            white-space: pre-wrap;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+        .success { color: #00ff00; }
+        .error { color: #ff0000; }
+        .info { color: #00ffff; }
+    </style>
+</head>
+<body>
+    <h1>🔬 Proof-of-Inference Market - Frontend API Test</h1>
+    <p>Test all services from your frontend (http://localhost:3004)</p>
+
+    <h2>Services:</h2>
+    <button onclick="testMLAgent()">Test ML Agent (8083)</button>
+    <button onclick="testPayment()">Test Payment (8084)</button>
+    <button onclick="testGoAVS()">Test Go AVS (8082)</button>
+    <button onclick="testAll()">Test All Services</button>
+
+    <h2>Output:</h2>
+    <div class="output" id="output"></div>
+
+    <script>
+        function log(message, type = 'info') {
+            const output = document.getElementById('output');
+            const className = type === 'success' ? 'success' : type === 'error' ? 'error' : 'info';
+            output.innerHTML += `<span class="${className}">${message}</span>\n`;
+            output.scrollTop = output.scrollHeight;
+        }
+
+        async function testMLAgent() {
+            log('Testing ML Agent (port 8083)...', 'info');
+            try {
+                const response = await fetch('http://localhost:8083/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        modelId: 'openai/gpt-4.5-mini',
+                        inputData: 'What is 2+2?',
+                        expectedOutput: '4',
+                        requestId: 12345
+                    })
+                });
+                const data = await response.json();
+                log(`✅ ML Agent Response:\n${JSON.stringify(data, null, 2)}`, 'success');
+            } catch (error) {
+                log(`❌ ML Agent Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testPayment() {
+            log('Testing 4Mica Payment (port 8084)...', 'info');
+            try {
+                const response = await fetch('http://localhost:8084/process-payment', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        from_address: '0x292F0E22A0245387a89d5DB50F016d18D6aF0bac',
+                        to_address: '0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb0',
+                        amount_wei: '6000000000000000',
+                        chain_id: 84532
+                    })
+                });
+                const data = await response.json();
+                log(`✅ Payment Response:\n${JSON.stringify(data, null, 2)}`, 'success');
+            } catch (error) {
+                log(`❌ Payment Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testGoAVS() {
+            log('Testing Go AVS (port 8082)...', 'info');
+            try {
+                const response = await fetch('http://localhost:8082/verify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        requestId: 1,
+                        modelId: 'gpt-4.5-mini',
+                        inputData: 'Test question',
+                        expectedOutput: '',
+                        reward: '5000000000000000',
+                        deadline: 9999999999,
+                        agent: '0x292F0E22A0245387a89d5DB50F016d18D6aF0bac'
+                    })
+                });
+                const data = await response.json();
+                log(`✅ Go AVS Response:\n${JSON.stringify(data, null, 2)}`, 'success');
+            } catch (error) {
+                log(`❌ Go AVS Error: ${error.message}`, 'error');
+            }
+        }
+
+        async function testAll() {
+            document.getElementById('output').innerHTML = '';
+            log('🚀 Testing all services...\n', 'info');
+            await testMLAgent();
+            log('', 'info');
+            await testPayment();
+            log('', 'info');
+            await testGoAVS();
+            log('\n✅ All tests complete!', 'success');
+        }
+
+        // Auto-test on load
+        window.onload = () => {
+            log('Frontend API Tester Ready', 'info');
+            log('Click "Test All Services" to verify CORS is working\n', 'info');
+        };
+    </script>
+</body>
+</html>

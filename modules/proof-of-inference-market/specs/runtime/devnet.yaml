@@ -1,0 +1,156 @@
+name: "devnet"
+version: "1.0.0"
+description: "Development network runtime configuration for Proof-of-Inference AVS"
+
+# Performance Configuration
+performance:
+  max_concurrent_verifications: 5
+  verification_timeout_ms: 60000
+  payment_timeout_ms: 30000
+  receipt_timeout_ms: 30000
+  max_queue_size: 100
+  worker_pool_size: 3
+
+# ML Model Configuration
+ml_models:
+  supported_models:
+    - id: "gpt-3.5-turbo"
+      family: "gpt"
+      verification_fee: 100000  # 0.1 USDC
+      timeout_ms: 45000
+      max_tokens: 1000
+      confidence_threshold: 70.0
+    - id: "gpt-4"
+      family: "gpt"
+      verification_fee: 500000  # 0.5 USDC
+      timeout_ms: 60000
+      max_tokens: 1500
+      confidence_threshold: 75.0
+    - id: "claude-3-opus"
+      family: "claude"
+      verification_fee: 300000  # 0.3 USDC
+      timeout_ms: 50000
+      max_tokens: 1200
+      confidence_threshold: 80.0
+    - id: "claude-3-sonnet"
+      family: "claude"
+      verification_fee: 200000  # 0.2 USDC
+      timeout_ms: 40000
+      max_tokens: 1000
+      confidence_threshold: 75.0
+    - id: "llama-2-70b"
+      family: "llama"
+      verification_fee: 150000  # 0.15 USDC
+      timeout_ms: 55000
+      max_tokens: 800
+      confidence_threshold: 70.0
+    - id: "mistral-7b"
+      family: "mistral"
+      verification_fee: 80000   # 0.08 USDC
+      timeout_ms: 35000
+      max_tokens: 800
+      confidence_threshold: 65.0
+
+  verification_strategies:
+    real_inference:
+      enabled: true
+      fallback_on_failure: true
+      openrouter_timeout_ms: 30000
+    heuristic_verification:
+      enabled: true
+      semantic_weight: 0.25
+      accuracy_weight: 0.25
+      completeness_weight: 0.20
+      quality_weight: 0.15
+      relevance_weight: 0.15
+
+# Network Configuration
+network:
+  chain_id: 31337
+  l1_rpc_url: "http://localhost:8545"
+  l2_rpc_url: "http://localhost:8546"
+  gas_limit: 500000
+  gas_price_gwei: 20
+  confirmation_blocks: 1
+
+# Contract Addresses (Anvil local)
+contracts:
+  proof_of_inference_avs: "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+  erc8004_receipt: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
+  reward_token: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
+  payment_processor: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
+
+# Agent Configuration
+agents:
+  ml_verification_agent:
+    enabled: true
+    endpoint: "http://localhost:8083"
+    timeout_ms: 45000
+    retry_attempts: 2
+    retry_delay_ms: 1000
+    openrouter_api_enabled: true
+    
+  inference_validator_agent:
+    enabled: true
+    endpoint: "http://localhost:8084"
+    timeout_ms: 60000
+    retry_attempts: 3
+    retry_delay_ms: 2000
+    min_confidence_threshold: 70.0
+    comprehensive_validation: true
+
+# Validator Configuration
+validators:
+  min_stake_wei: "1000000000000000000"  # 1 ETH
+  max_validators: 10
+  min_consensus_validators: 2
+  slashing_percentage: 1000  # 10%
+  challenge_window_hours: 1
+  verification_window_minutes: 30
+
+# Payment Integration (4Mica)
+payment:
+  service_url: "http://localhost:3001"
+  timeout_ms: 30000
+  retry_attempts: 3
+  min_amount: 50000     # 0.05 USDC
+  max_amount: 10000000  # 10 USDC
+  fee_percentage: 250   # 2.5%
+
+# Receipt Integration (ERC-8004)
+receipts:
+  service_url: "http://localhost:3002"
+  timeout_ms: 30000
+  retry_attempts: 3
+  ipfs_gateway: "http://localhost:8080/ipfs/"
+  metadata_template: "proof-of-inference-devnet-v1"
+  auto_verification: true
+
+# Security & Rate Limiting
+security:
+  rate_limit:
+    requests_per_minute: 100
+    requests_per_hour: 1000
+    burst_limit: 20
+  authentication:
+    require_signature: false  # Disabled for dev
+    jwt_expiry_hours: 24
+  ip_whitelist: []  # Empty for dev (allow all)
+
+# Monitoring & Logging
+monitoring:
+  metrics_enabled: true
+  metrics_port: 9090
+  health_check_interval_ms: 30000
+  log_level: "debug"
+  log_format: "console"
+  trace_requests: true
+
+# Development Specific Settings
+development:
+  mock_payments: false
+  mock_receipts: false
+  mock_ml_verification: false
+  fast_mode: true
+  skip_validation: false
+  debug_mode: true

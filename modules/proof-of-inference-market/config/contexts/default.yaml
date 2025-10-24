@@ -1,0 +1,68 @@
+name: "default"
+description: "Default configuration for Proof-of-Inference AVS"
+
+# EigenLayer Configuration
+eigenlayer:
+  registry_address: "0x0000000000000000000000000000000000000000"
+  hourglass_monorepo_path: "github.com/Layr-Labs/hourglass-monorepo"
+  
+# Contract Addresses (to be populated after deployment)
+contracts:
+  proof_of_inference_avs: "0x0000000000000000000000000000000000000000"
+  erc8004_receipt: "0x0000000000000000000000000000000000000000"
+  reward_token: "0x0000000000000000000000000000000000000000"
+  payment_processor: "0x0000000000000000000000000000000000000000"
+
+# Network Configuration
+network:
+  l1_rpc_url: "http://localhost:8545"
+  l2_rpc_url: "http://localhost:8546"
+  chain_id: 31337
+  
+# ML Verification Settings
+ml_verification:
+  supported_models:
+    - "gpt-3.5-turbo"
+    - "gpt-4"
+    - "claude-3-opus"
+    - "claude-3-sonnet"
+    - "llama-2-70b"
+    - "mistral-7b"
+  verification_timeout: 60
+  min_confidence_threshold: 70
+  consensus_validators: 3
+  
+# Payment Integration
+payment:
+  service_url: "http://localhost:3001"
+  token_symbol: "USDC"
+  min_verification_fee: 1000000  # 1 USDC (6 decimals)
+  max_verification_fee: 10000000  # 10 USDC
+  
+# ERC-8004 Receipt Integration
+receipts:
+  service_url: "http://localhost:3002"
+  ipfs_gateway: "https://ipfs.io/ipfs/"
+  metadata_template: "inference-verification-v1"
+  
+# Logging
+logging:
+  level: "info"
+  format: "json"
+  
+# Server Configuration
+server:
+  grpc_port: 8081
+  http_port: 8082
+  metrics_port: 9090
+  
+# Agent Configuration
+agents:
+  ml_verification_agent:
+    enabled: true
+    endpoint: "http://localhost:8083"
+    timeout: 30
+  inference_validator:
+    enabled: true
+    endpoint: "http://localhost:8084"
+    timeout: 45

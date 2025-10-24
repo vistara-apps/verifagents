@@ -1,0 +1,68 @@
+name: "devnet"
+description: "Development network configuration for Proof-of-Inference AVS"
+
+# EigenLayer Configuration
+eigenlayer:
+  registry_address: "0x663F3ad617193148711d28f5334eE4Ed07016602"
+  hourglass_monorepo_path: "github.com/Layr-Labs/hourglass-monorepo"
+  
+# Contract Addresses (Anvil local deployment)
+contracts:
+  proof_of_inference_avs: "0x5FbDB2315678afecb367f032d93F642f64180aa3"
+  erc8004_receipt: "0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512"
+  reward_token: "0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0"
+  payment_processor: "0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9"
+
+# Network Configuration
+network:
+  l1_rpc_url: "http://localhost:8545"
+  l2_rpc_url: "http://localhost:8546"
+  chain_id: 31337
+  
+# ML Verification Settings
+ml_verification:
+  supported_models:
+    - "gpt-3.5-turbo"
+    - "gpt-4"
+    - "claude-3-opus"
+    - "claude-3-sonnet"
+    - "llama-2-70b"
+    - "mistral-7b"
+  verification_timeout: 120  # Longer timeout for development
+  min_confidence_threshold: 60  # Lower threshold for testing
+  consensus_validators: 2  # Fewer validators for dev
+  
+# Payment Integration
+payment:
+  service_url: "http://localhost:3001"
+  token_symbol: "USDC"
+  min_verification_fee: 100000  # 0.1 USDC for dev
+  max_verification_fee: 1000000  # 1 USDC max for dev
+  
+# ERC-8004 Receipt Integration
+receipts:
+  service_url: "http://localhost:3002"
+  ipfs_gateway: "http://localhost:8080/ipfs/"  # Local IPFS for dev
+  metadata_template: "inference-verification-dev-v1"
+  
+# Logging
+logging:
+  level: "debug"
+  format: "console"
+  
+# Server Configuration
+server:
+  grpc_port: 8081
+  http_port: 8082
+  metrics_port: 9090
+  
+# Agent Configuration
+agents:
+  ml_verification_agent:
+    enabled: true
+    endpoint: "http://localhost:8083"
+    timeout: 60  # Longer timeout for dev
+  inference_validator:
+    enabled: true
+    endpoint: "http://localhost:8084"
+    timeout: 90

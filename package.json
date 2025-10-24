@@ -1,0 +1,42 @@
+{
+  "name": "verifagents",
+  "version": "1.0.0",
+  "description": "Production-ready verifiable agent systems built on ERC-8004",
+  "main": "index.js",
+  "scripts": {
+    "install-all": "npm run install-modules && npm install",
+    "install-modules": "for dir in modules/*/; do (cd \"$dir\" && npm install); done",
+    "test-all": "for dir in modules/*/; do (cd \"$dir\" && npm test); done",
+    "build-all": "for dir in modules/*/; do (cd \"$dir\" && npm run build); done",
+    "deploy-all": "for dir in modules/*/; do (cd \"$dir\" && npm run deploy); done",
+    "dashboard": "cd dashboard && npm start",
+    "demo": "node scripts/demo-all.js",
+    "lint": "eslint modules/*/src --ext .js,.ts,.tsx",
+    "format": "prettier --write modules/*/src/**/*.{js,ts,tsx,json,md}"
+  },
+  "keywords": [
+    "erc-8004",
+    "verifiable-agents",
+    "trustless-agents",
+    "blockchain",
+    "ai",
+    "ethereum"
+  ],
+  "author": "VerifAgents Team",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "eslint": "^8.0.0",
+    "prettier": "^2.8.0",
+    "typescript": "^4.9.0"
+  },
+  "dependencies": {
+    "ethers": "^6.7.1",
+    "dotenv": "^16.3.1"
+  },
+  "workspaces": [
+    "modules/*",
+    "dashboard",
+    "common"
+  ]
+}

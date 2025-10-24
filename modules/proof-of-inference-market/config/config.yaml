@@ -1,0 +1,7 @@
+version: "0.0.3"
+config:
+    project:
+        name: "proof-of-inference-avs"
+        version: "1.0.0"
+        context: devnet
+        telemetry_enabled: false

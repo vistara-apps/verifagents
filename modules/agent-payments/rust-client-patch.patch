@@ -1,0 +1,41 @@
+--- a/src/client/mod.rs
++++ b/src/client/mod.rs
+@@ -42,10 +42,16 @@ impl ClientCtx {
+             .await
+             .map_err(|e| ClientError::Rpc(e.to_string()))?;
+ 
+         let expected_chain_id = public_params.chain_id;
+ 
+-        let ethereum_http_rpc_url = cfg.ethereum_http_rpc_url.clone().unwrap_or(
+-            validate_url(&public_params.ethereum_http_rpc_url)
+-                .expect("Invalid Ethereum HTTP RPC URL received from server"),
+-        );
++        let ethereum_http_rpc_url = cfg.ethereum_http_rpc_url.clone().unwrap_or_else(|| {
++            if let Some(url) = &public_params.ethereum_http_rpc_url {
++                validate_url(url).expect("Invalid Ethereum HTTP RPC URL received from server")
++            } else {
++                // Fallback to a default Holesky RPC if not provided by API
++                validate_url("https://ethereum-holesky.publicnode.com")
++                    .expect("Invalid default Ethereum HTTP RPC URL")
++            }
++        });
+ 
+         let provider = ProviderBuilder::new()
+             .wallet(cfg.wallet_private_key.clone())
+@@ -65,10 +71,16 @@ impl ClientCtx {
+             )));
+         }
+ 
+-        let contract_address = cfg.contract_address.unwrap_or(
+-            validate_address(&public_params.contract_address)
+-                .expect("Invalid contract address received from server"),
+-        );
++        let contract_address = cfg.contract_address.unwrap_or_else(|| {
++            if let Some(addr) = &public_params.contract_address {
++                validate_address(addr).expect("Invalid contract address received from server")
++            } else {
++                // Fallback to the Holesky contract address if not provided by API
++                validate_address("0x951c851e2DdCE26b9bD9731cb682580CB92Ff221")
++                    .expect("Invalid default contract address")
++            }
++        });

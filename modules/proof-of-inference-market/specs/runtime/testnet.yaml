@@ -1,0 +1,158 @@
+name: "testnet"
+version: "1.0.0"
+description: "Testnet runtime configuration for Proof-of-Inference AVS"
+
+# Performance Configuration
+performance:
+  max_concurrent_verifications: 20
+  verification_timeout_ms: 120000
+  payment_timeout_ms: 60000
+  receipt_timeout_ms: 60000
+  max_queue_size: 500
+  worker_pool_size: 8
+
+# ML Model Configuration
+ml_models:
+  supported_models:
+    - id: "gpt-3.5-turbo"
+      family: "gpt"
+      verification_fee: 500000   # 0.5 USDC
+      timeout_ms: 60000
+      max_tokens: 1500
+      confidence_threshold: 75.0
+    - id: "gpt-4"
+      family: "gpt"
+      verification_fee: 2000000  # 2.0 USDC
+      timeout_ms: 90000
+      max_tokens: 2000
+      confidence_threshold: 80.0
+    - id: "claude-3-opus"
+      family: "claude"
+      verification_fee: 1500000  # 1.5 USDC
+      timeout_ms: 75000
+      max_tokens: 1800
+      confidence_threshold: 85.0
+    - id: "claude-3-sonnet"
+      family: "claude"
+      verification_fee: 1000000  # 1.0 USDC
+      timeout_ms: 60000
+      max_tokens: 1500
+      confidence_threshold: 80.0
+    - id: "llama-2-70b"
+      family: "llama"
+      verification_fee: 750000   # 0.75 USDC
+      timeout_ms: 70000
+      max_tokens: 1200
+      confidence_threshold: 75.0
+    - id: "mistral-7b"
+      family: "mistral"
+      verification_fee: 400000   # 0.4 USDC
+      timeout_ms: 50000
+      max_tokens: 1000
+      confidence_threshold: 70.0
+
+  verification_strategies:
+    real_inference:
+      enabled: true
+      fallback_on_failure: true
+      openrouter_timeout_ms: 45000
+    heuristic_verification:
+      enabled: true
+      semantic_weight: 0.25
+      accuracy_weight: 0.25
+      completeness_weight: 0.20
+      quality_weight: 0.15
+      relevance_weight: 0.15
+
+# Network Configuration (Base Sepolia)
+network:
+  chain_id: 84532
+  l1_rpc_url: "https://sepolia.infura.io/v3/YOUR_INFURA_KEY"
+  l2_rpc_url: "https://sepolia.base.org"
+  gas_limit: 1000000
+  gas_price_gwei: 50
+  confirmation_blocks: 3
+
+# Contract Addresses (Base Sepolia Testnet)
+contracts:
+  proof_of_inference_avs: "0x0000000000000000000000000000000000000000"
+  erc8004_receipt: "0x0000000000000000000000000000000000000000"
+  reward_token: "0x0000000000000000000000000000000000000000"
+  payment_processor: "0x0000000000000000000000000000000000000000"
+
+# Agent Configuration
+agents:
+  ml_verification_agent:
+    enabled: true
+    endpoint: "http://ml-agent.testnet:8083"
+    timeout_ms: 60000
+    retry_attempts: 3
+    retry_delay_ms: 2000
+    openrouter_api_enabled: true
+    
+  inference_validator_agent:
+    enabled: true
+    endpoint: "http://validator-agent.testnet:8084"
+    timeout_ms: 90000
+    retry_attempts: 3
+    retry_delay_ms: 3000
+    min_confidence_threshold: 75.0
+    comprehensive_validation: true
+
+# Validator Configuration
+validators:
+  min_stake_wei: "5000000000000000000"   # 5 ETH
+  max_validators: 50
+  min_consensus_validators: 3
+  slashing_percentage: 2000  # 20%
+  challenge_window_hours: 24
+  verification_window_minutes: 60
+
+# Payment Integration (4Mica)
+payment:
+  service_url: "https://payment.testnet.4mica.com"
+  timeout_ms: 60000
+  retry_attempts: 3
+  min_amount: 100000     # 0.1 USDC
+  max_amount: 50000000   # 50 USDC
+  fee_percentage: 300    # 3%
+
+# Receipt Integration (ERC-8004)
+receipts:
+  service_url: "https://receipts.testnet.proof-of-inference.com"
+  timeout_ms: 60000
+  retry_attempts: 3
+  ipfs_gateway: "https://ipfs.io/ipfs/"
+  metadata_template: "proof-of-inference-testnet-v1"
+  auto_verification: true
+
+# Security & Rate Limiting
+security:
+  rate_limit:
+    requests_per_minute: 60
+    requests_per_hour: 500
+    burst_limit: 10
+  authentication:
+    require_signature: true
+    jwt_expiry_hours: 12
+  ip_whitelist: []  # Allow all for testnet
+
+# Monitoring & Logging
+monitoring:
+  metrics_enabled: true
+  metrics_port: 9090
+  health_check_interval_ms: 60000
+  log_level: "info"
+  log_format: "json"
+  trace_requests: false
+
+# Testnet Specific Settings
+testnet:
+  mock_payments: false
+  mock_receipts: false
+  mock_ml_verification: false
+  fast_mode: false
+  skip_validation: false
+  debug_mode: false
+  faucet_enabled: true
+  test_data_enabled: true

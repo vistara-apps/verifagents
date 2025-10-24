@@ -1,0 +1,185 @@
+name: "mainnet"
+version: "1.0.0"
+description: "Production mainnet runtime configuration for Proof-of-Inference AVS"
+
+# Performance Configuration
+performance:
+  max_concurrent_verifications: 100
+  verification_timeout_ms: 180000
+  payment_timeout_ms: 120000
+  receipt_timeout_ms: 120000
+  max_queue_size: 2000
+  worker_pool_size: 16
+
+# ML Model Configuration
+ml_models:
+  supported_models:
+    - id: "gpt-3.5-turbo"
+      family: "gpt"
+      verification_fee: 2000000   # 2.0 USDC
+      timeout_ms: 90000
+      max_tokens: 2000
+      confidence_threshold: 80.0
+    - id: "gpt-4"
+      family: "gpt"
+      verification_fee: 10000000  # 10.0 USDC
+      timeout_ms: 150000
+      max_tokens: 3000
+      confidence_threshold: 85.0
+    - id: "claude-3-opus"
+      family: "claude"
+      verification_fee: 8000000   # 8.0 USDC
+      timeout_ms: 120000
+      max_tokens: 2500
+      confidence_threshold: 90.0
+    - id: "claude-3-sonnet"
+      family: "claude"
+      verification_fee: 5000000   # 5.0 USDC
+      timeout_ms: 100000
+      max_tokens: 2000
+      confidence_threshold: 85.0
+    - id: "llama-2-70b"
+      family: "llama"
+      verification_fee: 4000000   # 4.0 USDC
+      timeout_ms: 110000
+      max_tokens: 1800
+      confidence_threshold: 80.0
+    - id: "mistral-7b"
+      family: "mistral"
+      verification_fee: 2500000   # 2.5 USDC
+      timeout_ms: 80000
+      max_tokens: 1500
+      confidence_threshold: 75.0
+
+  verification_strategies:
+    real_inference:
+      enabled: true
+      fallback_on_failure: true
+      openrouter_timeout_ms: 60000
+    heuristic_verification:
+      enabled: true
+      semantic_weight: 0.25
+      accuracy_weight: 0.25
+      completeness_weight: 0.20
+      quality_weight: 0.15
+      relevance_weight: 0.15
+
+# Network Configuration (Ethereum Mainnet + Base)
+network:
+  chain_id: 1
+  l1_rpc_url: "https://mainnet.infura.io/v3/YOUR_INFURA_KEY"
+  l2_rpc_url: "https://mainnet.base.org"
+  gas_limit: 2000000
+  gas_price_gwei: 100
+  confirmation_blocks: 12
+
+# Contract Addresses (Mainnet - To be deployed)
+contracts:
+  proof_of_inference_avs: "0x0000000000000000000000000000000000000000"
+  erc8004_receipt: "0x0000000000000000000000000000000000000000"
+  reward_token: "0xA0b86a33E6441c8C7e2c2C51C2AE57bF3b26F8c8"  # USDC
+  payment_processor: "0x0000000000000000000000000000000000000000"
+
+# Agent Configuration
+agents:
+  ml_verification_agent:
+    enabled: true
+    endpoint: "https://ml-agent.proof-of-inference.com"
+    timeout_ms: 120000
+    retry_attempts: 5
+    retry_delay_ms: 5000
+    openrouter_api_enabled: true
+    
+  inference_validator_agent:
+    enabled: true
+    endpoint: "https://validator-agent.proof-of-inference.com"
+    timeout_ms: 180000
+    retry_attempts: 5
+    retry_delay_ms: 10000
+    min_confidence_threshold: 80.0
+    comprehensive_validation: true
+
+# Validator Configuration
+validators:
+  min_stake_wei: "32000000000000000000"  # 32 ETH
+  max_validators: 200
+  min_consensus_validators: 5
+  slashing_percentage: 5000  # 50%
+  challenge_window_hours: 168  # 1 week
+  verification_window_minutes: 180  # 3 hours
+
+# Payment Integration (4Mica)
+payment:
+  service_url: "https://api.4mica.com"
+  timeout_ms: 120000
+  retry_attempts: 5
+  min_amount: 1000000     # 1.0 USDC
+  max_amount: 1000000000  # 1000 USDC
+  fee_percentage: 250     # 2.5%
+
+# Receipt Integration (ERC-8004)
+receipts:
+  service_url: "https://receipts.proof-of-inference.com"
+  timeout_ms: 120000
+  retry_attempts: 5
+  ipfs_gateway: "https://gateway.pinata.cloud/ipfs/"
+  metadata_template: "proof-of-inference-mainnet-v1"
+  auto_verification: true
+
+# Security & Rate Limiting
+security:
+  rate_limit:
+    requests_per_minute: 30
+    requests_per_hour: 200
+    burst_limit: 5
+  authentication:
+    require_signature: true
+    jwt_expiry_hours: 6
+  ip_whitelist: [
+    # Production operator IPs
+    "52.70.123.45",
+    "34.123.45.67"
+  ]
+
+# Monitoring & Logging
+monitoring:
+  metrics_enabled: true
+  metrics_port: 9090
+  health_check_interval_ms: 120000
+  log_level: "warn"
+  log_format: "json"
+  trace_requests: false
+
+# Production Specific Settings
+production:
+  mock_payments: false
+  mock_receipts: false
+  mock_ml_verification: false
+  fast_mode: false
+  skip_validation: false
+  debug_mode: false
+  high_availability: true
+  backup_enabled: true
+  disaster_recovery: true
+
+# Circuit Breakers
+circuit_breakers:
+  payment_service:
+    failure_threshold: 10
+    timeout_ms: 300000  # 5 minutes
+    half_open_max_calls: 3
+  receipt_service:
+    failure_threshold: 8
+    timeout_ms: 300000
+    half_open_max_calls: 3
+  ml_agent:
+    failure_threshold: 5
+    timeout_ms: 180000  # 3 minutes
+    half_open_max_calls: 2
+
+# Resource Limits
+resource_limits:
+  max_memory_mb: 2048
+  max_cpu_percent: 80
+  max_disk_mb: 10240
+  max_file_descriptors: 8192

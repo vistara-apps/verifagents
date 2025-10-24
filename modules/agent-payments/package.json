@@ -1,0 +1,32 @@
+{
+  "name": "@verifagents/agent-payments",
+  "version": "1.0.0",
+  "description": "Agent-to-agent payments for autonomous economy loops",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsx watch src/index.ts",
+    "demo": "tsx src/demo.ts",
+    "demo:basic": "tsx src/demo.ts --scenario=basic-payment",
+    "demo:autonomous": "tsx src/demo.ts --scenario=autonomous-payment",
+    "demo:settlement": "tsx src/demo.ts --scenario=tab-settlement",
+    "test": "jest",
+    "deploy": "tsx src/deploy.ts"
+  },
+  "dependencies": {
+    "@verifagents/common": "workspace:*",
+    "@openzeppelin/contracts": "^5.0.0",
+    "ethers": "^6.8.0",
+    "viem": "^2.0.0",
+    "zod": "^3.22.0",
+    "axios": "^1.6.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "tsx": "^4.0.0",
+    "jest": "^29.0.0",
+    "@types/jest": "^29.0.0"
+  }
+}
